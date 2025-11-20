@@ -1,12 +1,17 @@
+// Open/Close Report Form
 function openReport() {
   document.getElementById("myForm").style.display = "block";
 }
 function closeReport() {
   document.getElementById("myForm").style.display = "none";
 }
+
+// Close Link Modal
 function closeLinkModal() {
   document.getElementById("link-modal").style.display = "none";
 }
+
+// Share Button
 function shareButton() {
   if (navigator.share) {
     const url = window.location.href;
@@ -22,6 +27,8 @@ function shareButton() {
     alert("Sharing isn't supported in this browser. Try copying the link manually.");
   }
 }
+
+// Ads Link Modal with countdown
 function showAdsLinkModal(url) {
   const modal = document.getElementById("link-modal");
   const timerEl = document.getElementById("link-timer");
@@ -39,11 +46,26 @@ function showAdsLinkModal(url) {
   }, 1000);
 }
 
+// Main DOMContentLoaded
 document.addEventListener("DOMContentLoaded", () => {
-  Plyr.setup("#myVideo", {
-    controls: ["play-large", "rewind", "play", "fast-forward", "progress", "current-time", "duration", "captions", "settings", "pip", "airplay", "fullscreen"]
+  // ArtPlayer initialization
+  const art = new Artplayer({
+    container: document.getElementById('artplayer-container'),
+    url: "{{file_url}}",
+    autoplay: false,
+    autoSize: true,
+    theme: '#ff4c3b',
+    pip: true,
+    mutex: true,
+    setting: true,
+    moreVideoAttr: { crossOrigin: 'anonymous' },
+    quality: [
+      { name: '1080p', url: '{{file_url}}' }
+      // যদি multi-quality চান, আরও add করতে পারেন
+    ]
   });
 
+  // Theme Toggle
   const themeBtn = document.getElementById("theme-toggle-btn");
   let theme = localStorage.getItem("theme") || "dark";
 
@@ -69,7 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   applyTheme(theme);
 
-  // Footer inject
+  // Footer Inject
   const style = document.createElement("style");
   style.innerHTML = `
     @keyframes devBounce {
@@ -115,6 +137,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.body.appendChild(footer);
 });
 
+// Helper functions
 function Open_Link(url) {
   if (url) window.open(url, "_blank");
 }
@@ -128,9 +151,11 @@ function Open_TG(url) {
   window.location.href = url.replace("replace", "tg");
 }
 
+// Streamlink setup
 const videolink = window.location.href;
 const streamlink = videolink.replace("/watch/", "/dl/");
 
+// External players
 function vlc_player() {
   const clean = streamlink.replace(/^https?:\/\//, "");
   window.location.href = `vlc://${clean}`;
@@ -143,6 +168,8 @@ function playit_player() {
   const clean = streamlink.replace(/^https?:\/\//, "");
   window.location.href = `intent://${clean}#Intent;package=com.playit.videoplayer;action=android.intent.action.VIEW;end`;
 }
+
+// Download
 function streamDownload() {
   window.location.href = streamlink;
 }
